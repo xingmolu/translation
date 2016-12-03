@@ -1,7 +1,7 @@
 
 > 原文链接：https://www.codeproject.com/articles/598955/coordinateplussystemplusinplushtml-pluscanvas-cpl  
 
-# canvas中的坐标系
+# canvas中的坐标系,用y轴向上增长绘图
 
 > 在某些动画类型中，默认坐标系是不方便的，幸好，你可以使用转型方式来改变它...
 
