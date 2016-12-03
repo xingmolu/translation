@@ -26,7 +26,7 @@ contexnt.fillRect(x, offsetY - y, size, size);
    context.scale(1, -1);
 ```
 
-[translate and scale](img/canvas_coordinate/translate_and_scale_small.jpg)  
+![translate and scale](img/canvas_coordinate/translate_and_scale_small.jpg)  
 
 但是这里有个catch：提供-1作为scale的第二个参数的结果是整个图像是为倒置y坐标创建的。这也适用于文本（调用fillText将呈现字母上下颠倒）。因此，在写任何文本之前，您必须恢复默认的y轴配置。因为手动恢复画布状态是笨挫的，方法save()和restore()，这两个方法分别用于在堆栈上保存画布状态和从画布状态堆栈中恢复状态。建议在变换之前使用保存save方法。canvas的状态不仅包括变换，还包括一些如填充样式或者线宽之类的值...  
 
@@ -43,6 +43,6 @@ contexnt.fillRect(x, offsetY - y, size, size);
 ```  
 
 以上代码绘制了2个正方形：
-[draw 2 squares](img/canvas_coordinate/canvas_rects.png)  
+![draw 2 squares](img/canvas_coordinate/canvas_rects.png)  
 
 第一个正方形是红色的且使用2倍刻度绘制，第二个正方形使用默认画布设置（颜色黑色和1倍刻度）。这发生是因为在对比例和颜色进行任何改变之前，画布状态被保存在堆栈上，之后再绘制第二个正方形之前被恢复了。
