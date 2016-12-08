@@ -153,11 +153,11 @@ function onWindowResize() {
 }
 ```
 
-如果你现在允许这个示例，你将会看到一个如下所示的简单场景，它包含了木地板，三面墙，一个红色球，和一个紫色圆环结。
+如果你现在运行这个示例，你将会看到一个如下所示的简单场景，它包含了木地板，三面墙，一个红色球，和一个紫色圆环结。
 
 ![light](img/threejs/light/Lighting1.jpg)
 
-从这点上，我们将主要关注`addLights()`这行代码。事实上，如果你现在看看这个功能，你可以看到我们为我们的场景定义了一个光：定向光（directional light）。
+我们将主要关注`addLights()`这行代码。事实上，如果你现在看看这个函数，可以看到我们为场景定义了一个光：定向光（directional light）。
 
 ## directional light 定向光
 directional light 是创建户外场景时常用的照明形式，但可用在任何场景上。定向光类似于太阳的光。它是以恶搞非常遥远的光，在一个方向闪耀。就像太阳一样，因为它是非常远的，所有的光线互相平行。此外，这个光的行为好像是无限远，所以光的位置是没有关系的，只有光的角度有影响。这里是我们光线的代码：
@@ -184,9 +184,10 @@ scene.add(ambLight);
 1. 完整的移除它。
 2. 添加所有其他灯光。
 3. 如果场景的某些部分没有被任何主灯照亮，那么只需添加足够的环境光，使这些黑暗的角落可见。
-4. 如果仍然看起来不好，请回到第一步。
+4. 如果仍然看起来不好，请回到第一步。  
 
-我们加上环境光就像这样了：
+
+我们加上环境光就像这样了：  
 ![ambient light](img/threejs/light/Lighting2.jpg)
 
 ## point Lights 点光源
@@ -206,3 +207,91 @@ greenPoint.position.set( -70, 5, 70 );
 scene.add(greenPoint);
 scene.add(new THREE.PointLightHelper(greenPoint, 3));
 ```
+
+我们创建了2个点光源，一个蓝色一个绿色。点光源的构造函数需要3个属性：光的颜色、强度、和强度下降到0的距离（光的范围）。如果设置距离为0，那么距离是无限的。在前三行中，我们创建了一个点光源，设置其位置并且将它加入到场景中。第四行添加一个PointLightHelper，对于向场景添加光，PointLightHelper并不是必须的。它是一个帮助类，可以在创建场景的同时在光的位置放置一个wireframed球体，使其更容易可视化。
+
+在删除现有光源并且添加绿色和蓝色点光源后，我们的场景如下所示：  
+
+![point light](img/threejs/light/Lighting3.jpg)
+
+## spot Light  射灯
+
+接下来我们添加一个射灯到场景中。聚光灯正如它的名字那样：从一个方向上的给定点照射的光形成圆锥形状。
+
+将以下代码添加到`addLights()`方法的结尾部分：  
+```javascript
+var spotLight = new THREE.SpotLight(0xffffff, 1, 200, 20, 10);
+spotLight.position.set( 0, 150, 0 );
+  
+var spotTarget = new THREE.Object3D();
+spotTarget.position.set(0, 0, 0);
+spotLight.target = spotTarget;
+  
+scene.add(spotLight);
+scene.add(new THREE.PointLightHelper(spotLight, 1));
+```
+
+正如你第一行看到的，我们为spotlight的构造器指定了5个参数：颜色，强度，距离，角度和指数。之前我们已经使用过颜色，强度和距离，这里新增了2个：角度和指数。
+1. 角度是锥形将采取的角度，或者点将是多宽。  
+2. 指数是指光从目标方向落到0的速度。数字越高，光线越暗。
+
+
+在第二行，我们给light设置了位置，在接下来的第三行，我们创建了一个Object3D，设置它的位置为0,0,0。然后将这个对象设置为spotlight的目标。就像定向光，聚光灯所面对的方向不是由光的旋转决定的，而是通过找到光及其目标的角度来计算。在这种情况下，我们设置目标为一个通用的Object3D类实例。在threejs中Object3D是所以3D object的父类。所以我们可以很容易地将我们的聚光灯的目标设置成任意场景元素，比如球体。那样，如果我们对球体进行动画处理，聚光灯会自动跟踪球体。事实上，我们将添加一点动画到我们的聚光灯，你可以刷新浏览器看到如下：  
+
+![point light](img/threejs/light/Lighting4.jpg)
+
+
+
+## Hemisphere Light 半球光
+
+如你看到的，我们的场景还是比较暗，特别是房间后面的角落。我们可以添加一个低强度的定向光，或少量的环境光照亮这些区域，但接下来我要添加另一种称为半球光的光。半球光与环境光类似，因为它没有位置或方向。
+
+添加以下代码到`addLights()`函数的结尾：  
+
+```javascript
+var hemLight = new THREE.HemisphereLight(0xffe5bb, 0xFFBF00, .1);
+scene.add(hemLight);
+```
+
+如你看到的，半球光的构造器有3个属性，前两个是颜色，第三个是强度。为什么有2个颜色呢？半球照明是一种添加一些环境照明的方式，但有一点更现实主义。第一种颜色代表来自我们模型上方的光的颜色，像太阳或者天花板灯。第二种颜色是来自我们模型下方的光的颜色，表示地面反射的太阳的颜色或反射离开地板的天花板灯的颜色。这两种颜色的梯度应用于我们场景中的模型。就像其他灯，我们可以指定这种光的强度。它为我们提供了比环境光更多的微调控制。
+
+刷新浏览器，可以看到如下场景：  
+
+![point light](img/threejs/light/Lighting5.jpg) 
+
+区别很小，但是你应该注意到，你现在可以看到场景的后角了。
+
+threejs为你的场景提供了广泛的选择，每一种灯源都包含大量的选项，如颜色，距离和强度等。当彼此结合使用时，照明场景的可能性几乎是无限的。
+
+在结束本教程之前，我想做最后一个调整，使我们的场景更加动态。我要动画的聚光灯，以便它模拟一个吊灯从电线上来回摆动的天花板灯。
+
+为此，我们首先需要将spotLight变量声明为全局变量，这样我们可以在`animate()`函数中使用它，我们再声明一个计数器的变量。
+
+添加以下代码到应用的最上面：  
+
+```javascript
+var spotLight;
+var counter = 0;
+```
+
+把`addLight()`函数带代码由下面: 
+```javascript
+var spotLight = new THREE.SpotLight(0xffffff, 1, 200, 20, 10);
+```
+改为：
+```javascript
+spotLight = new THREE.SpotLight(0xffffff, 1, 200, 20, 10);
+```
+
+再添加以下代码到`animate()`函数中：
+```javascript
+counter += .1;
+spotLight.target.position.x = Math.sin(counter) * 100;
+```
+
+我们在这里所做的是更新聚光灯所指向的X位置。我使用正弦波计算位置，所以我们得到一个很好的平滑摆动效果。
+
+刷新你的浏览器，应该看到聚光灯来回摆动。
+
+## 结论
+Threejs提供了许多不同的光源可以在场景里使用，每一个光源提供了一些不同的选项来控制光源的效果。当组合使用时，你有无尽的选择来增强你的3D场景。在使用灯源方面没有正确或错误，只是玩弄他们得到你想要的效果。祝你好运和快乐使用灯光！
