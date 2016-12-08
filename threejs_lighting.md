@@ -160,3 +160,49 @@ function onWindowResize() {
 从这点上，我们将主要关注`addLights()`这行代码。事实上，如果你现在看看这个功能，你可以看到我们为我们的场景定义了一个光：定向光（directional light）。
 
 ## directional light 定向光
+directional light 是创建户外场景时常用的照明形式，但可用在任何场景上。定向光类似于太阳的光。它是以恶搞非常遥远的光，在一个方向闪耀。就像太阳一样，因为它是非常远的，所有的光线互相平行。此外，这个光的行为好像是无限远，所以光的位置是没有关系的，只有光的角度有影响。这里是我们光线的代码：
+```javascript
+var dirLight = new THREE.DirectionalLight(0xffffff, 1);
+dirLight.position.set(100, 100, 50);
+scene.add(dirLight);
+```
+
+在第一行中，我们用两个参数来创建light：光线的颜色和光的强度或亮度。你可以随意调整它们，看看如何影响场景。第二行代码是设置光源的位置，最后第三行，将光源添加到我们的场景中。
+
+既然之前说到位置没有关系，为什么我们要设置光的位置呢？原因是因为在threejs中，光的方向不是由光的旋转确定的，而是通过从其当前位置和其目标的位置计算角度。由于我没有指定目标位置，默认的目标位子是0,0,0原点。我可以通过不移动光源的位置和为我们的光源指定一个目标位置（-100, -100, -50）来达到一样的效果。
+
+## Ambient Light 环境光 
+
+让我们通过在`addLights()`方法的结尾添加两行代码开始
+```javascript
+var ambLight = new THREE.AmbientLight(0x404040);
+scene.add(ambLight);
+```
+
+环境光只有一个属性：颜色。第一行代码创建了一个柔和灰色的环境光。如果你刷新你的浏览器，你会看到添加这个灯引起的变化，场景中的所有的物体都添加了平坦的灰色阴影。事实上，它看起来很不好，那是因为环境光并不是真正的光。它只是我之前说的，给整个场景添加一些颜色的平阴影。我曾经给过一个使用环境光的提示：  
+
+1. 完整的移除它。
+2. 添加所有其他灯光。
+3. 如果场景的某些部分没有被任何主灯照亮，那么只需添加足够的环境光，使这些黑暗的角落可见。
+4. 如果仍然看起来不好，请回到第一步。
+
+我们加上环境光就像这样了：
+![ambient light](img/threejs/light/Lighting2.jpg)
+
+## point Lights 点光源
+
+点光源是像灯泡一样工作的灯光：你把它放置在一个位置，它们会照向各个方向，点亮任何在他们范围的区域。
+
+让我们删除所有现有的灯光，用以下内容替换掉`addLights()`方法中的内容：
+
+```javascript
+var bluePoint = new THREE.PointLight(0x0033ff, 3, 150);
+bluePoint.position.set( 70, 5, 70 );
+scene.add(bluePoint);
+scene.add(new THREE.PointLightHelper(bluePoint, 3));
+  
+var greenPoint = new THREE.PointLight(0x33ff00, 1, 150);
+greenPoint.position.set( -70, 5, 70 );
+scene.add(greenPoint);
+scene.add(new THREE.PointLightHelper(greenPoint, 3));
+```
