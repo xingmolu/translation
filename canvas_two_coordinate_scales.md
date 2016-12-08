@@ -114,4 +114,4 @@ function secondcross(context) {
 
 ## 在画布上绘制
 
-使用javascript命令来绘制html的canvas，javascript api中有绘制几何图形（点，线和简单形状上的颜色和阴影）和复制图像的规范。（也可以使用javascript一次通过一个个像素来修改每一个，但是这样做不是我们这篇文章关注的。）
+html的canvas使用javascript命令来绘制图形，javascript api中有绘制几何图形（点，线和简单形状上的颜色和阴影）和复制图像的规范。（也可以使用javascript一次通过一个个像素来修改每一个，但是这样做不是我们这篇文章关注的。）也有规范绘制简单的文本标签，canvas处理文本是非常基本的，大概只有labels；它不容易扩展为多行文本，并用文字包装构建文本编辑小部件将是非常困难的。
