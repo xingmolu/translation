@@ -54,7 +54,7 @@ TodoList组件需要一个todo项的数组来渲染自己，所以它需要一�
 
 当用户点击筛选条件时，`Filter`组件也需要告诉其它组件状态的切换，所以需要一个action：`SET_VIBILITY_FILTER`。
 
-![filter](img/react-redux/filter.png)
+![filter](img/react-redux/Filter.png)
 
 ## Redux术语：`Action Creators`
 Action Creators都是简单的函数，其主要职责是从DOM事件中接收数据，将其格式化为正式的`Action`json对象然后返回这个action对象。这有助于帮助我们规范化数据。
@@ -183,7 +183,7 @@ let AddTodoForm = ({onSubmit}) => {
 
 ## 第八步：最终把他们结合到一起
 ```javascript
-import React from 'react // ← Main React library
+import React from 'react' // ← Main React library
 import { render } from 'react-dom' // ← Main react library
 import { Provider } from 'react-redux' //← Bridge React and Redux
 import { createStore } from 'redux' // ← Main Redux library
